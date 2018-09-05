@@ -15,7 +15,7 @@
               <v-list-tile-title v-text="note"></v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn icon @click="openEditNoteDialog(note)">
+              <v-btn icon @click="openEditNoteDialog(note, index)">
                 <v-icon>edit</v-icon>
               </v-btn>
             </v-list-tile-action>
@@ -49,12 +49,12 @@
             <h2>Edit note</h2>
           </v-card-title>
           <v-card-text>
-            <v-textarea v-model="noteSelected"></v-textarea>
+            <v-textarea v-model="noteSelected.text"></v-textarea>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn small color="default" @click="isEditNoteDialogOpen = false">Close</v-btn>
-            <v-btn small color="success">Save</v-btn>
+            <v-btn small color="success" @click="saveEditNote">Save</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -72,7 +72,7 @@ export default {
     isEditNoteDialogOpen: false,
     newNoteValid: null,
     newNote: '',
-    noteSelected: ''
+    noteSelected: {}
   }),
   computed: {
     ...mapGetters(['notes'])
@@ -83,13 +83,18 @@ export default {
       this.newNote = ''
       this.isNewNoteDialogOpen = true
     },
-    openEditNoteDialog (note) {
+    openEditNoteDialog (note, index) {
       this.isEditNoteDialogOpen = true
-      this.noteSelected = note
+      this.noteSelected.text = note
+      this.noteSelected.index = index
     },
     saveNewNote () {
       this.addNote(this.newNote)
       this.isNewNoteDialogOpen = false
+    },
+    saveEditNote () {
+      this.editNote(this.noteSelected)
+      this.isEditNoteDialogOpen = false
     }
   }
 }
