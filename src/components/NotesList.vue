@@ -12,14 +12,22 @@
         <v-list>
           <v-list-tile v-for="(note, index) in notes" :key="note + index">
             <v-list-tile-content>
-              <v-list-tile-title v-text="note"></v-list-tile-title>
+              <v-list-tile-title >{{ note | fixLenght }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn icon @click="openEditNoteDialog(note, index)">
+              <v-btn small icon @click="openEditNoteDialog(note, index)">
                 <v-icon>edit</v-icon>
               </v-btn>
             </v-list-tile-action>
+            <v-list-tile-action>
+              <v-btn small icon @click="removeNote(index)">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </v-list-tile-action>
           </v-list-tile>
+          <p v-if="notes.length === 0">
+            Nothing to show
+          </p>
         </v-list>
       </v-card-text>
     </v-card>
@@ -77,8 +85,16 @@ export default {
   computed: {
     ...mapGetters(['notes'])
   },
+  filters: {
+    fixLenght (val) {
+      if (val.length > 80) {
+        return `${val.substring(0, 75)} ...`
+      }
+      return val
+    }
+  },
   methods: {
-    ...mapActions(['addNote', 'editNote']),
+    ...mapActions(['addNote', 'editNote', 'removeNote']),
     openNewNoteDialog () {
       this.newNote = ''
       this.isNewNoteDialogOpen = true

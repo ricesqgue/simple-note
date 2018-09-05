@@ -25,8 +25,8 @@ const actions = {
   editNote (context, note) {
     context.commit('editNote', note)
   },
-  removeNote (context, note) {
-    context.commit('removeNote')
+  removeNote (context, index) {
+    context.commit('removeNote', index)
   }
 }
 
@@ -40,8 +40,8 @@ const mutations = {
   editNote (state, note) {
     state.notes[note.index] = note.text
   },
-  removeNote (state) {
-
+  removeNote (state, index) {
+    state.notes.splice(index, 1)
   }
 }
 
