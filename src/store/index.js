@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 const state = {
   notes: [
-    { id: 1, text: 'Note 1' },
-    { id: 2, text: 'Note 2' },
-    { id: 3, text: 'Note 3' }
+    'Note 1',
+    'Note 2',
+    'Note 3'
   ]
 }
 
@@ -20,7 +20,7 @@ const actions = {
     context.commit('loadNotes')
   },
   addNote (context, note) {
-    context.commit('addNote')
+    context.commit('addNote', note)
   },
   editNote (context, note) {
     context.commit('editNote')
@@ -34,10 +34,10 @@ const mutations = {
   loadNotes (state) {
 
   },
-  addNote (state) {
-
+  addNote (state, note) {
+    state.notes.push(note)
   },
-  editNote (state) {
+  editNote (state, note) {
 
   },
   removeNote (state) {
