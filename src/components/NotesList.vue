@@ -25,7 +25,7 @@
               </v-btn>
             </v-list-tile-action>
           </v-list-tile>
-          <p v-if="notes.length === 0">
+          <p v-if="notes !== null && notes.length === 0">
             Nothing to show
           </p>
         </v-list>
@@ -39,12 +39,12 @@
             <h2>Add new note</h2>
           </v-card-title>
           <v-card-text>
-            <v-textarea v-model="newNote"></v-textarea>
+            <v-textarea required :rules="[(v) => !!v || 'Note cannot be empty']" v-model="newNote"></v-textarea>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn small color="default" @click="isNewNoteDialogOpen = false">Close</v-btn>
-            <v-btn small color="success" @click="saveNewNote()">Save</v-btn>
+            <v-btn small color="success" :disabled="!newNoteValid" @click="saveNewNote()">Save</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -52,17 +52,17 @@
 
     <v-dialog v-model="isEditNoteDialogOpen" max-width="1000px">
       <v-card>
-        <v-form v-model="newNoteValid" ref="editNoteForm">
+        <v-form v-model="editNoteValid" ref="editNoteForm">
           <v-card-title>
             <h2>Edit note</h2>
           </v-card-title>
           <v-card-text>
-            <v-textarea v-model="noteSelected.text"></v-textarea>
+            <v-textarea required :rules="[(v) => !!v || 'Note cannot be empty']" v-model="noteSelected.text"></v-textarea>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn small color="default" @click="isEditNoteDialogOpen = false">Close</v-btn>
-            <v-btn small color="success" @click="saveEditNote">Save</v-btn>
+            <v-btn small color="success" :disabled="!editNoteValid" @click="saveEditNote">Save</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -79,6 +79,7 @@ export default {
     isNewNoteDialogOpen: false,
     isEditNoteDialogOpen: false,
     newNoteValid: null,
+    editNoteValid: null,
     newNote: '',
     noteSelected: {}
   }),
@@ -94,7 +95,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['addNote', 'editNote', 'removeNote']),
+    ...mapActions(['addNote', 'editNote', 'removeNote', 'loadNotes']),
     openNewNoteDialog () {
       this.newNote = ''
       this.isNewNoteDialogOpen = true
@@ -112,6 +113,9 @@ export default {
       this.editNote(this.noteSelected)
       this.isEditNoteDialogOpen = false
     }
+  },
+  beforeMount () {
+    this.loadNotes()
   }
 }
 </script>
